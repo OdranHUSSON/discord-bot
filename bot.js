@@ -40,6 +40,7 @@ client.on("messageCreate", async (message) => {
 
   try {
     // Make a call to the Next.js API
+    console.log('channelId', message.channel.id);
     const response = await axios.post(
       "http://localhost:3000/api/chat/discord",
       {
@@ -48,6 +49,7 @@ client.on("messageCreate", async (message) => {
         userName: message.author.username,
         channelId: message.channel.id,
         message: message.content,
+        language: "fr",
       }
     );
 
@@ -56,9 +58,7 @@ client.on("messageCreate", async (message) => {
     } else {
       message.channel.send("No chat model found.");
     }
-  } catch (error) {
-    console.error("Error fetching chat model:", error);
-
+  } catch (error) {    
     if (error.response) {
       if (error.response.status === 404) {
         message.channel.send("Agent not found.");
