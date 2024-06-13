@@ -53,9 +53,7 @@ client.on("messageCreate", async (message) => {
       }
     );
 
-    if (response.data && response.data.chatModelName) {
-      message.channel.send(`Chat Model Name: ${response.data.chatModelName}`);
-    } else {
+    if (!response.data) {
       message.channel.send("No chat model found.");
     }
   } catch (error) {    
