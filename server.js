@@ -2,6 +2,8 @@ const express = require("express");
 const { Client, GatewayIntentBits, Partials } = require("discord.js");
 const axios = require("axios");
 const dotenv = require("dotenv");
+const fs = require("fs");
+
 dotenv.config();
 
 const app = express();
@@ -11,7 +13,9 @@ let bots = {};
 
 app.use(express.json());
 
-const createBot = (token) => {
+const createBot = (botConfig) => {
+  const { token, apiEndpoint } = botConfig;
+
   const client = new Client({
     intents: [
       GatewayIntentBits.Guilds,
@@ -34,7 +38,7 @@ const createBot = (token) => {
     const botId = client.user.id;
 
     try {
-      const response = await axios.post("https://aismarttalk.tech/api/chat/discord", {
+      const response = await axios.post(apiEndpoint, {
         botId,
         userId: message.author.id,
         userName: message.author.username,
@@ -75,17 +79,17 @@ const createBot = (token) => {
 };
 
 app.post("/add-bot", (req, res) => {
-  const { token, botId } = req.body;
+  const { token, botId, apiEndpoint } = req.body;
 
-  if (!token || !botId) {
-    return res.status(400).json({ error: "Token and botId are required" });
+  if (!token || !botId || !apiEndpoint) {
+    return res.status(400).json({ error: "Token, botId, and apiEndpoint are required" });
   }
 
   if (bots[botId]) {
     return res.status(400).json({ error: "Bot already exists" });
   }
 
-  bots[botId] = createBot(token);
+  bots[botId] = createBot({ token, apiEndpoint });
   res.status(200).json({ success: true });
 });
 
@@ -130,6 +134,14 @@ app.post("/send-message", async (req, res) => {
   }
 });
 
+const loadInitialBots = () => {
+  const config = JSON.parse(fs.readFileSync("config.json", "utf8"));
+  config.initialBots.forEach((bot) => {
+    bots[bot.botId] = createBot(bot);
+  });
+};
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  loadInitialBots();
 });
