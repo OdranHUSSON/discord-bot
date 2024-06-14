@@ -1,0 +1,14 @@
+{
+  "initialBots": [
+    {
+      "token": "YOUR_BOT_TOKEN_1",
+      "botId": "bot1",
+      "apiEndpoint": "http://localhost:3000/api/chat/discord"
+    },
+    {
+      "token": "YOUR_BOT_TOKEN_2",
+      "botId": "bot2",
+      "apiEndpoint": "http://yourotherserver/api/chat/discord"
+    }
+  ]
+}

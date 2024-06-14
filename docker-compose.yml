@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - OTHER_ENV_VAR=${OTHER_ENV_VAR}
+    volumes:
+      - .:/app
+    restart: unless-stopped
