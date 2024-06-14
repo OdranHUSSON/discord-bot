@@ -1,6 +1,13 @@
-make start:
+.PHONY: install start stop
+
+install:
+	docker network create ai-toolkit-network || true
+
+start:
 	docker compose up -d
-make stop:
+
+build:
+	docker compose build
+
+stop:
 	docker compose down
-
-

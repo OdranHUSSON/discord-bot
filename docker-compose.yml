@@ -12,3 +12,9 @@ services:
     volumes:
       - .:/app
     restart: unless-stopped
+    networks:
+      - ai-toolkit-network
+
+networks:
+  ai-toolkit-network:
+    external: true
