@@ -38,6 +38,7 @@ const createBot = (botConfig) => {
     const botId = client.user.id;
 
     try {
+      message.channel.sendTyping();
       const response = await axios.post(apiEndpoint, {
         botId,
         userId: message.author.id,
@@ -132,6 +133,16 @@ app.post("/send-message", async (req, res) => {
     console.error("Error sending message:", error);
     res.status(500).json({ error: "Failed to send message" });
   }
+});
+
+app.post("/change-presence", (req, res) => {
+  const { presence } = req.body;
+
+  if (!presence) {
+    return res.status(400).json({ error: "Presence text is required" });
+  }
+
+  res.status(200).json({ success: true });
 });
 
 const loadInitialBots = () => {
